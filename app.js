@@ -75,6 +75,7 @@ app.get("/blogs/:id", function(req, res){
 })
 
 app.get("/blogs/:id/edit",function(req,res){
+    
     Blog.findById(req.params.id,function(err,foundBlog){
         if(err){
             res.redirect("/blogs");
@@ -85,6 +86,7 @@ app.get("/blogs/:id/edit",function(req,res){
 });
 
 app.put("/blogs/:id", function(req, res){
+    req.body.blog.body = req.sanitize(req.body.blog.body);
     Blog.findByIdAndUpdate(req.params.id,req.body.blog,function(err, updatedBlog){
         if(err){
             res.redirect("/blogs");
