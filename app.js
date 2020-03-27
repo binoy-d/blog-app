@@ -1,15 +1,22 @@
 const mongoDB = "mongodb://127.0.0.1:27017/blog_app"
 const port = 3000;
-var express    = require("express"),
-    app        = express(),
-    mongoose   = require("mongoose"),
-    bodyParser = require("body-parser");
+var express        = require("express"),
+    app            = express(),
+    methodOverride = require("method-override")
+    mongoose       = require("mongoose"),
+    bodyParser     = require("body-parser");
 
-mongoose.connect(mongoDB, {useNewUrlParser:true});
+mongoose.connect(mongoDB);
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
+mongoose.set('useUnifiedTopology', true);
+
 //boilerplate
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended:true}));
+app.use(methodOverride("_method"));
 
 //blog schema
 var blogSchema = mongoose.Schema({
@@ -53,11 +60,30 @@ app.get("/blogs/:id", function(req, res){
         if(err){
             console.log(err);
         }else{
-            res.render("show",{blog:foundBlog})
+            res.render("show",{blog:foundBlog});
         }
     });
 })
 
+app.get("/blogs/:id/edit",function(req,res){
+    Blog.findById(req.params.id,function(err,foundBlog){
+        if(err){
+            res.redirect("/blogs");
+        }else{
+            res.render("edit",{blog:foundBlog});
+        }
+    });
+});
+
+app.put("/blogs/:id", function(req, res){
+    Blog.findByIdAndUpdate(req.params.id,req.body.blog,function(err, updatedBlog){
+        if(err){
+            res.redirect("/blogs");
+        }else{
+            res.redirect("/blogs/"+req.params.id)
+        }
+    })
+});
 
 app.listen(port, function(){
     console.log("Server is running");
