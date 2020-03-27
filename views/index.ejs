@@ -1,0 +1,24 @@
+
+<%- include("./partials/header") %> 
+
+<h1>INDEX PAGE</h1>
+
+
+<div class= "ui link cards">
+    <% for(var i = 0;i<blogs.length;i++){ %> 
+        <a class="ui centered card" href="/blogs/<%= blogs[i]._id %>">
+            <div class=" ui fluid rounded image">
+                <img src="<%= blogs[i].image %> " alt="<%= blogs[i].title %> ">
+            </div>
+            <div class="content">
+                <div class = "header"><%= blogs[i].title %> </div>
+                <div class = "description"> <%= blogs[i].body.slice(0,41)+"..." %> </div>
+            </div>
+        </a>
+    <% } %> 
+
+</div>
+
+
+
+<%- include("./partials/footer") %> 
