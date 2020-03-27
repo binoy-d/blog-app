@@ -1,4 +1,4 @@
-const mongoDB = "mongodb+srv://dbinoy:bleeblob22@blog-app-cluster-kaylu.mongodb.net/test?retryWrites=true&w=majority"
+const mongoDB = "mongodb+srv://general_user:general_pass@blog-app-cluster-kaylu.mongodb.net/test?retryWrites=true&w=majority"
 const port = process.env.PORT || 80;
 var express          = require("express"),
     app              = express(),
