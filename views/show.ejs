@@ -1,7 +1,14 @@
 <%- include("./partials/header") %> 
 
 <img class="ui fluid rounded image" src="<%= blog.image %> " alt="">
-<h1 class = "ui block inverted header center aligned"><%= blog.title %></h1>
-<p><%= blog.body%></p>
+<h1 class = "ui block inverted header center aligned">
+    <span><%= blog.title %></span>
+    <a class = "ui right floated basic blue inverted button" href = "/blogs/<%= blog._id %>/edit">Edit</a>
+</h1>
+<p><%- blog.body%></p>
+
+<form action="/blogs/<%= blog._id %>?_method=DELETE" method="POST">
+    <button class="ui red basic button">Delete</button>
+</form>
 
 <%- include("./partials/footer") %> 

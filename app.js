@@ -1,21 +1,25 @@
 const mongoDB = "mongodb://127.0.0.1:27017/blog_app"
 const port = 3000;
-var express        = require("express"),
-    app            = express(),
-    methodOverride = require("method-override")
-    mongoose       = require("mongoose"),
-    bodyParser     = require("body-parser");
+var express          = require("express"),
+    app              = express(),
+    methodOverride   = require("method-override")
+    mongoose         = require("mongoose"),
+    expressSanitizer = require("express-sanitizer")
+    bodyParser       = require("body-parser");
 
-mongoose.connect(mongoDB);
+
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
 
+mongoose.connect(mongoDB);
+
 //boilerplate
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended:true}));
+app.use(expressSanitizer());
 app.use(methodOverride("_method"));
 
 //blog schema
@@ -44,6 +48,7 @@ app.get("/blogs/new", function(req, res){
 });
 
 app.post("/blogs", function(req, res){
+    req.body.blog.body = req.sanitize(req.body.blog.body);
     Blog.create(req.body.blog , function(err, newblog){
         if(err){
             console.log(err)
@@ -83,6 +88,16 @@ app.put("/blogs/:id", function(req, res){
             res.redirect("/blogs/"+req.params.id)
         }
     })
+});
+
+app.delete("/blogs/:id",function(req,res){
+    Blog.findByIdAndRemove(req.params.id, function(err){
+        if(err){
+            res.redirect("/blogs");
+        }else{
+            res.redirect("/blogs");
+        }
+    });
 });
 
 app.listen(port, function(){
