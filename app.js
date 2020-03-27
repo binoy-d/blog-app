@@ -1,5 +1,5 @@
-const mongoDB = "mongodb://127.0.0.1:27017/blog_app"
-const port = process.env.PORT || 3000;
+const mongoDB = "mongodb+srv://dbinoy:bleeblob22@blog-app-cluster-kaylu.mongodb.net/test?retryWrites=true&w=majority"
+const port = process.env.PORT || 80;
 var express          = require("express"),
     app              = express(),
     methodOverride   = require("method-override")
@@ -13,7 +13,11 @@ mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
 
-mongoose.connect(mongoDB);
+mongoose.connect(mongoDB).then(() => {
+    console.log('Connected to DB');
+}).catch(err => {
+    console.log(err);
+});
 
 //boilerplate
 app.set("view engine", "ejs");
